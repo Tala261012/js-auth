@@ -3,3 +3,10 @@
 
 @use './var.scss';
 @forward './var.scss';
+
+@use './click.scss';
+@forward './click.scss';
+
+// два раза подключать один и тот же файл нельзя - ошибка
+// @use './form.scss';
+// @forward './form.scss';

@@ -1,0 +1,15 @@
+{{!-- <div class="checkbox">
+	<input type="text" class="checkbox__text" disabled value="{{value}}" placeholder="{{placeholder}}" name="{{name}}">
+	<span onclick="checkBox.toggle(this); signupForm.change(this.name, this.value)"
+		class="checkbox__icon checkbox__icon--off"></span>
+</div> --}}
+
+<div class="field field--checkbox">
+	<button onclick="
+	fieldCheckbox.toggle(this);
+	{{action}}('{{name}}', this.hasAttribute('active'));
+	" type="button" class="field__wrapper">
+		<span class="field__icon"></span>
+		<span class="field__label field__label--checkbox">{{label}}</span>
+	</button>
+</div>

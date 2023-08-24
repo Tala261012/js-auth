@@ -1,0 +1,53 @@
+{{!
+Це код container файлу для index сторінки,
+в якому міститься код, котрий буде віддаватися по шляху (PATH) - "/"
+}}
+
+<div class="page page--background">
+	<header>
+		{{> back-button}}
+	</header>
+
+	<form class="page__section">
+		<h1 class="page__title">Регистрация</h1>
+
+		<div class="form">
+
+			<div class="form__item">
+				{{> field action='signupForm.change' name='email' label='Эл. адрес:' type='email'
+				placeholder='Введите Ваш email'}}
+				<span name="email" class="form__error">Error</span>
+			</div>
+
+			<div class="form__item">
+				{{> field-password action='signupForm.change' name='passowrd' label='Пароль:'
+				placeholder='Введите пароль:'}}
+				<span name="password" class="form__error">Error</span>
+			</div>
+
+			<div class="form__item">
+				{{> field-select action='signupForm.change' name='role' label='Роль:'
+				placeholder='Выберите роль' list=data.role}}
+				<span name="role" class="form__error">Error</span>
+			</div>
+
+
+			<div class="form__item">
+				{{> field-checkbox action='signupForm.change' name='isConfirm' label='Вы соглашаетесь с правилами сервиса'}}
+				<span name="isConfirm" class="form__error">Error</span>
+			</div>
+
+		</div>
+
+		<button onclick="signupForm.submit()" class="button" type="button">Зарегистрироваться</button>
+
+		<span class="alert alert--progress">Внимание, ошибка!</span>
+	</form>
+</div>
+
+{{!
+Цей код містить лише те, що буде виводитись в
+
+<body>
+	Адже наш layout/default.hbs має вже структуру HTML
+	}}
