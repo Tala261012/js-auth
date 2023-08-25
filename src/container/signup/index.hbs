@@ -20,9 +20,15 @@
 			</div>
 
 			<div class="form__item">
-				{{> field-password action='signupForm.change' name='passowrd' label='Пароль:'
+				{{> field-password action='signupForm.change' name='password' label='Пароль:'
 				placeholder='Введите пароль:'}}
 				<span name="password" class="form__error">Error</span>
+			</div>
+
+			<div class="form__item">
+				{{> field-password action='signupForm.change' name='passwordAgain' label='Подтвердите пароль:'
+				placeholder='Введите пароль еще раз:'}}
+				<span name="passwordAgain" class="form__error">Error</span>
 			</div>
 
 			<div class="form__item">
@@ -39,9 +45,9 @@
 
 		</div>
 
-		<button onclick="signupForm.submit()" class="button" type="button">Зарегистрироваться</button>
+		<button onclick="signupForm.submit()" class="button button--disabled" type="button">Зарегистрироваться</button>
 
-		<span class="alert alert--progress">Внимание, ошибка!</span>
+		<span class="alert alert--disabled">Внимание, ошибка!</span>
 	</form>
 </div>
 
