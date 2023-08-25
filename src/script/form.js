@@ -15,7 +15,7 @@ export class Form {
   // именем ключа будет имя инпута name, значением - его value
   value = {}
   error = {}
-  disabled = false
+  disabled = true
 
   change = (name, value) => {
     const error = this.validate(name, value)
@@ -28,6 +28,8 @@ export class Form {
       delete this.error[name]
       this.setError(name, null)
     }
+
+    this.checkDisabled()
   }
 
   setError = (name, error) => {
@@ -59,10 +61,10 @@ export class Form {
     let disabled = false
 
     Object.values(this.FIELD_NAME).forEach((name) => {
-      const error = this.validate(name, this.value[name])
-
-      if (error) {
-        this.setError(name, error)
+      if (
+        this.error[name] ||
+        this.value[name] === undefined
+      ) {
         disabled = true
       }
     })
@@ -77,5 +79,31 @@ export class Form {
     }
 
     this.disabled = disabled
+  }
+
+  validateAll = () => {
+    Object.values(this.FIELD_NAME).forEach((name) => {
+      const error = this.validate(name, this.value[name])
+
+      if (error) {
+        this.setError(name, error)
+      }
+    })
+  }
+
+  setAlert = (status, text) => {
+    const el = document.querySelector('.alert')
+
+    if (status === 'progress') {
+      el.className = 'alert alert--progress'
+    } else if (status === 'success') {
+      el.className = 'alert alert--success'
+    } else if (status === 'error') {
+      el.className = 'alert alert--error'
+    } else {
+      el.className = 'alert alert--disabled'
+    }
+
+    if (text) el.innerText = text
   }
 }

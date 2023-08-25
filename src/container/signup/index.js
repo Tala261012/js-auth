@@ -82,10 +82,46 @@ class SignupForm extends Form {
   }
 
   // будет на кнопке, для отправки данных на сервер
-  submit = () => {
-    this.checkDisabled()
-
+  submit = async () => {
     console.log(this.value)
+    if (this.disabled === true) {
+      this.validateAll()
+    } else {
+      console.log(this.value)
+
+      this.setAlert('progress', 'Загрузка...')
+
+      try {
+        const res = await fetch('/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: this.convertData(),
+        })
+
+        const data = await res.json()
+
+        if (res.ok) {
+          this.setAlert('success', data.message)
+        } else {
+          this.setAlert('error', data.message)
+        }
+      } catch (error) {
+        this.setAlert('error', error.message)
+      }
+    }
+  }
+
+  convertData = () => {
+    return JSON.stringify({
+      [this.FIELD_NAME.EMAIL]:
+        this.value[this.FIELD_NAME.EMAIL],
+      [this.FIELD_NAME.PASSWORD]:
+        this.value[this.FIELD_NAME.PASSWORD],
+      [this.FIELD_NAME.ROLE]:
+        this.value[this.FIELD_NAME.ROLE],
+    })
   }
 }
 
