@@ -15,7 +15,7 @@ class Confirm {
     // const confirm = new Confirm(data)
     this.#list.push(new Confirm(data))
 
-    console.log('список с кодами:', this.#list)
+    console.log('!!! список с кодами:', this.#list)
 
     setTimeout(() => {
       this.delete(code)

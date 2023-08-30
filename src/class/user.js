@@ -8,10 +8,15 @@ class User {
   //список созданных пользователей
   static #list = []
 
+  // id для пользователей
+  static #count = 1
+
   constructor({ email, password, role }) {
+    this.id = User.#count++
     this.email = String(email).toLowerCase()
-    this.password = password
+    this.password = String(password)
     this.role = User.#convertRole(role) //!
+    this.isConfirm = false
   }
 
   static #convertRole = (role) => {
@@ -34,6 +39,8 @@ class User {
     this.#list.push(user)
 
     console.log(this.#list)
+
+    return user
   }
 
   static getByEmail(email) {

@@ -1,27 +1,20 @@
+import { Form } from '../../script/form'
 import {
-  Form,
-  REG_EXP_EMAIL,
-  REG_EXP_PASSWORD,
-} from '../../script/form'
-import { saveSession } from '../../script/session'
+  getTokenSession,
+  saveSession,
+  getSession,
+} from '../../script/session'
 
-class RecoveryConfirmForm extends Form {
-  // в этом объекте будут все данные одного пользователя
-
+class SignupConfirmForm extends Form {
   // тут - названия полей в верстке
   FIELD_NAME = {
     CODE: 'code',
-    PASSWORD: 'password',
-    PASSWORD_AGAIN: 'passwordAgain',
   }
+
   // тут - заготовленные тексты на случай ошибок при валидации
   FIELD_ERROR = {
     IS_EMPTY: 'Введите значение в поле',
     IS_BIG: 'Слишком длинное значение, уберите лишнее',
-    PASSWORD:
-      'Пароль должен состоять не менее, чем из 8 символов, включая хотя бы одну цифру, строчную и заглавную букву.',
-    PASSWORD_AGAIN:
-      'Ваш второй пароль не совпадает с первым.',
   }
 
   validate = (name, value) => {
@@ -31,21 +24,6 @@ class RecoveryConfirmForm extends Form {
 
     if (String(value).length > 20) {
       return this.FIELD_ERROR.IS_BIG
-    }
-
-    if (name === this.FIELD_NAME.PASSWORD) {
-      if (!REG_EXP_PASSWORD.test(String(value))) {
-        return this.FIELD_ERROR.PASSWORD
-      }
-    }
-
-    if (name === this.FIELD_NAME.PASSWORD_AGAIN) {
-      if (
-        String(value) !==
-        this.value[this.FIELD_NAME.PASSWORD]
-      ) {
-        return this.FIELD_ERROR.PASSWORD_AGAIN
-      }
     }
   }
 
@@ -59,7 +37,7 @@ class RecoveryConfirmForm extends Form {
       this.setAlert('progress', 'Загрузка...')
 
       try {
-        const res = await fetch('/recovery-confirm', {
+        const res = await fetch('/signup-confirm', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -87,10 +65,35 @@ class RecoveryConfirmForm extends Form {
       [this.FIELD_NAME.CODE]: Number(
         this.value[this.FIELD_NAME.CODE],
       ),
-      [this.FIELD_NAME.PASSWORD]:
-        this.value[this.FIELD_NAME.PASSWORD],
+      token: getTokenSession(),
     })
   }
 }
 
-window.recoveryConfirmForm = new RecoveryConfirmForm()
+window.signupConfirmForm = new SignupConfirmForm()
+
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    if (window.session) {
+      if (window.session.user.isConfirm) {
+        location.assign('/')
+      }
+    } else {
+      location.assign('/')
+    }
+  } catch (err) {}
+
+  //TODO document.querySelector('.link#renew') тоже находит правильно
+
+  document
+    .querySelector('#renew')
+    .addEventListener('click', (e) => {
+      e.preventDefault()
+
+      const session = getSession()
+
+      location.assign(
+        `/signup-confirm?renew=true&email=${session.user.email}`,
+      )
+    })
+})

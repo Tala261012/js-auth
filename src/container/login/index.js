@@ -3,25 +3,22 @@ import {
   REG_EXP_EMAIL,
   REG_EXP_PASSWORD,
 } from '../../script/form'
+
 import { saveSession } from '../../script/session'
 
-class RecoveryConfirmForm extends Form {
+class LoginForm extends Form {
   // в этом объекте будут все данные одного пользователя
 
   // тут - названия полей в верстке
   FIELD_NAME = {
-    CODE: 'code',
+    EMAIL: 'email',
     PASSWORD: 'password',
-    PASSWORD_AGAIN: 'passwordAgain',
   }
   // тут - заготовленные тексты на случай ошибок при валидации
   FIELD_ERROR = {
     IS_EMPTY: 'Введите значение в поле',
     IS_BIG: 'Слишком длинное значение, уберите лишнее',
-    PASSWORD:
-      'Пароль должен состоять не менее, чем из 8 символов, включая хотя бы одну цифру, строчную и заглавную букву.',
-    PASSWORD_AGAIN:
-      'Ваш второй пароль не совпадает с первым.',
+    EMAIL: 'Введите корректное значение e-mail адреса',
   }
 
   validate = (name, value) => {
@@ -33,24 +30,15 @@ class RecoveryConfirmForm extends Form {
       return this.FIELD_ERROR.IS_BIG
     }
 
-    if (name === this.FIELD_NAME.PASSWORD) {
-      if (!REG_EXP_PASSWORD.test(String(value))) {
-        return this.FIELD_ERROR.PASSWORD
-      }
-    }
-
-    if (name === this.FIELD_NAME.PASSWORD_AGAIN) {
-      if (
-        String(value) !==
-        this.value[this.FIELD_NAME.PASSWORD]
-      ) {
-        return this.FIELD_ERROR.PASSWORD_AGAIN
+    if (name === this.FIELD_NAME.EMAIL) {
+      if (!REG_EXP_EMAIL.test(String(value))) {
+        return this.FIELD_ERROR.EMAIL
       }
     }
   }
 
-  // будет на кнопке, для отправки данных на сервер
   submit = async () => {
+    console.log(this.value)
     if (this.disabled === true) {
       this.validateAll()
     } else {
@@ -59,7 +47,7 @@ class RecoveryConfirmForm extends Form {
       this.setAlert('progress', 'Загрузка...')
 
       try {
-        const res = await fetch('/recovery-confirm', {
+        const res = await fetch('/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -84,13 +72,19 @@ class RecoveryConfirmForm extends Form {
 
   convertData = () => {
     return JSON.stringify({
-      [this.FIELD_NAME.CODE]: Number(
-        this.value[this.FIELD_NAME.CODE],
-      ),
+      [this.FIELD_NAME.EMAIL]:
+        this.value[this.FIELD_NAME.EMAIL],
       [this.FIELD_NAME.PASSWORD]:
         this.value[this.FIELD_NAME.PASSWORD],
     })
   }
 }
 
-window.recoveryConfirmForm = new RecoveryConfirmForm()
+window.loginForm = new LoginForm()
+
+document.addEventListener('DOMContentLoaded', () => {
+  // если у пользователя есть аккаунт, то...
+  if (window.session) {
+    location.assign('/')
+  }
+})
